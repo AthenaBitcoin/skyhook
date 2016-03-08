@@ -1,4 +1,4 @@
-<?
+<?php
 use Exceptions\ContainerException;
 
 /**
@@ -171,4 +171,3 @@ class Container {
 		return $built;
 	}
 }
-

@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Dynamic template with (hopefully) limited logic, looks to *.phtml files,
  * allows for lazy evaluation. Data may be escaped before being passed to
