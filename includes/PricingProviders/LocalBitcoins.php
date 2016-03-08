@@ -19,11 +19,11 @@ class LocalBitcoins implements PricingProvider {
 	}
 	
 	private function fetchPrice($ticker) {
-		if (!isset($ticker['EUR']['rates']['last'])) {
+		if (!isset($ticker['USD']['rates']['last'])) {
 			throw new \UnexpectedValueException('Could not retrieve pricing data.');
 		}
 		
-		return new Amount($ticker['EUR']['rates']['last']);
+		return new Amount($ticker['USD']['rates']['last']);
 	}
 	
 	public function getTickerURL() {

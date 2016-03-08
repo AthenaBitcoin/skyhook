@@ -403,7 +403,7 @@ PageManager.addPage( PageIds.DEPOSIT,
     context.setText(".no-funds-error", _("Bitcoin funds empty: Do not insert any more bills.")); 
     context.setText(".cash-deposited-label", _("cash deposited"));
     context.setText(".bitcoin-purchased-label", _("bitcoin purchased"));
-    context.setText(".cash-deposited-currency", "EUR"); // TODO: Get currency from config
+    context.setText(".cash-deposited-currency", "USD"); // TODO: Get currency from config
     context.setText(".bitcoin-sent-to-label", _("Bitcoin will be sent to:"));
     context.setText("#btn-buy-cancel", _("Cancel"));
     context.setText("#btn-send-bitcoin", _("Send Bitcoin"));

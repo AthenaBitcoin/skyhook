@@ -19,7 +19,7 @@ class BitcoinAverage implements PricingProvider {
 	public function getPrice() {
 		$ticker = JSON::decode(
 			SimpleHTTP::get(
-				'https://api.bitcoinaverage.com/ticker/EUR'
+				'https://api.bitcoinaverage.com/ticker/USD'
 			)
 		);
 		
