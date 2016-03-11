@@ -108,14 +108,27 @@ class Config {
 			$this->pricingProvider,
 			$this->walletProvider
 		)) {
-			return false;
+		  error_log("wallet issue or pricing issue");
+		  return false;
 		}
-		return (
-			$this->walletProvider->isConfigured()
-			&& Currency::validateCode($this->getCurrencyCode())
-			&& $this->pricingProvider->isConfigured()
-			&& isset($this->data['email']['password'], $this->data['email']['username'])
-		);
+		if (! $this->walletProvider->isConfigured()){
+		   error_log("Wallet is not configured.");
+		   return false;
+		}
+		if (! Currency::validateCode($this->getCurrencyCode())){
+		   error_log("Bad Currency Code");
+		   return false;
+		
+		}
+		if (! $this->pricingProvider->isConfigured()){
+		   error_log("Bad Pricing Provider.");
+		   return false;
+		}
+		if (! isset($this->data['email']['password'], $this->data['email']['username']) ){
+		   error_log("Missing email user and or pass");
+		   return false;
+		}
+		return true;
 	}
 	
 	private $providerCache = [];
@@ -179,6 +192,3 @@ class Config {
 		);
 	}
 }
-
-
-
