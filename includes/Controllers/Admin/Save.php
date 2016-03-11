@@ -13,7 +13,7 @@ use ConfigVerifier;
 use Localization;
 
 class Save implements Controller {
-	
+      	
 	private function requireNewPassword(Post $post) {
 		$errors = ['#password-settings' => []];
 		$passwordSettings = &$errors['#password-settings'];
@@ -69,8 +69,13 @@ class Save implements Controller {
 		);
 		
 		if (count($errors) > 0) {
-			echo JSON::encode(['errors' => $errors]);
-			return true;
+		   ob_start();	
+		   var_dump($errors);
+		   $errs = ob_get_clean();
+
+		   error_log("In Save... Encountered the following errors: " . $errs);
+		   echo JSON::encode(['errors' => $errors]);  
+		   return true;
 		}
 		
 		try {
@@ -92,6 +97,7 @@ class Save implements Controller {
 		
 		if (count($errors) > 0) {
 			echo JSON::encode(['errors' => $errors]);
+			error_log("Received some sort of other error");
 			return true;
 		}
 		
@@ -101,10 +107,10 @@ class Save implements Controller {
 		);
 		
 		if (count($errors) > 0) {
+		   error_log("Received Errors after config verifier.");
 			echo JSON::encode(['errors' => $errors]);
 			return true;
 		}
-		
 		try{
 			$admin->saveConfig($post['admin_password'], $cfg);
 			Localization::saveLocale($post['locale']);
