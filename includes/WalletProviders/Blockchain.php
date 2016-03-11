@@ -14,10 +14,16 @@ class Blockchain implements \WalletProvider {
 	private $secondPass;
 	private $id;
 	private $fromAddress;
-	private static $URL = "https://blockchain.info/merchant/";
+
+	//https://blockchain.info/api/blockchain_wallet_api
+	private static $URL = "http://localhost:3000/merchant/";
+	//private static $URL = "https://blockchain.info/merchant/";
+
+	private static $API_CODE = "ba11d83c-5390-467d-8fa9-c1b9d338faf1";
+	
 	
 	private function baseURL() {
-		return self::$URL . urlencode($this->id) . '/';
+		return self::$URL . substr(urlencode($this->id), 0, 36) . '/';
 	}
 	
 	public function configure(array $options) {
@@ -33,20 +39,24 @@ class Blockchain implements \WalletProvider {
 	}
 	
 	public function verifyOwnership() {
-		$request = $this->baseURL() . 'address_balance?' . http_build_query([
+		        $from_addr =  $this->fromAddress->get();
+
+	       $request = $this->baseURL() . 'list?' . http_build_query([
 			'password' => $this->mainPass,
-			'address' => $this->fromAddress->get()
+			'api_code' => self::$API_CODE
 		]);
-		
+
 		try {
 			$get = SimpleHTTP::get($request);
 		} catch (Exception $e) {
+		  error_log("Error making a request.");
 			throw new Exception("There was a network error while processing the request.");
 		}
 		
 		$decoded = JSON::decode($get);
 		
 		if (isset($decoded['error'])) {
+			error_log('Blockchain.info responded with: ' . $decoded['error']);
 			throw new Exception('Blockchain.info responded with: ' . $decoded['error']);
 		}
 		
@@ -102,7 +112,8 @@ class Blockchain implements \WalletProvider {
 			'second_password' => $this->secondPass,
 			'from' => $this->fromAddress->get(),
 			'to' => $to->get(),
-			'amount' => $howMuch->toSatoshis()->get()
+			'amount' => $howMuch->toSatoshis()->get(),
+			'api_code' => self::$API_CODE
 		]);
 		
 		try {
@@ -112,7 +123,6 @@ class Blockchain implements \WalletProvider {
 		}
 		
 		$decoded = JSON::decode($encoded);
-		error_log('blockchain: ' . $encoded . "\n");
 		
 		if (isset($decoded['error'])) {
 			throw new Exception('Blockchain.info responded with: ' . $decoded['error']);
