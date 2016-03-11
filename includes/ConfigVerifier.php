@@ -61,6 +61,7 @@ class ConfigVerifier {
 		try {
 			$cfg->getWalletProvider()->verifyOwnership();
 		} catch (Exception $e) {
+		  error_log("Could not verify wallet ownership.");
 			$walletSettings[] = [
 				'id' => '#wallet-id-error',
 				'error' => $e->getMessage(),
@@ -68,11 +69,14 @@ class ConfigVerifier {
 		}
 		
 		try {
-			$t = new Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl');
+			$t = new Swift_SmtpTransport('smtp.gmail.com',
+			   465,
+			   'ssl');
 			$t->setUsername($cfg->getEmailUsername())
 				->setPassword($cfg->getEmailPassword())
 				->start();
 		} catch (Exception $e) {
+		  error_log("Failed on email configuration.");
 			$emailSettings[] = [
 				'id' => '#email-username-error',
 				'error' => $e->getMessage(),
@@ -83,6 +87,7 @@ class ConfigVerifier {
 		
 		if (!empty($pricingSettings)) {
 			$errors['#pricing-settings'] = self::getPricingErrorsFromConfig($cfg);
+			error_log("Price Settings Validation Error");
 		}
 		
 		if (!empty($walletSettings)) {
